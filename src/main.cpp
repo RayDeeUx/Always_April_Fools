@@ -62,7 +62,8 @@ class $modify(CommentCell) {
 		CCArray* commentLabels = nullptr;
 
 		CCLayer* mainLayer = getChildOfType<CCLayer>(this, 1);
-		CCMenu* mainMenu = static_cast<CCMenu*>(mainLayer->getChildByID("main-menu"));
+		CCMenu* mainMenu = dynamic_cast<CCMenu*>(mainLayer->getChildByID("main-menu"));
+		if (!mainMenu) return;
 		CCMenuItemSpriteExtra* menuItem = nullptr;
 
 		bool isProfileComment = this->m_accountComment;
@@ -85,9 +86,9 @@ class $modify(CommentCell) {
 			commentLabels = getChildOfType<CCNode>(static_cast<CCNode*>(mainLayer->getChildByID("comment-text-area")), 0)->getChildren();
 		}
 		else {
-			menuItem = usernameClickable ? static_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("username-button"))
+			menuItem = usernameClickable ? dynamic_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("username-button"))
 				: CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("modBadge_01_001.png"), mainLayer, nullptr);
-
+			if (!menuItem) return;
 			usernameLabel = usernameClickable ? static_cast<CCLabelBMFont*>(menuItem->getChildren()->objectAtIndex(0)) : static_cast<CCLabelBMFont*>(mainLayer->getChildByID("username-label"));
 
 			commentLabels = CCArray::create();
@@ -96,6 +97,10 @@ class $modify(CommentCell) {
 			if (usernameClickable) {
 				auto likeButton = static_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("like-button"));
 				likeButton->setPosition(likeButton->getPosition() + mainMenu->getPosition());
+
+				auto deleteButton = dynamic_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("delete-button"));
+				if (deleteButton) deleteButton->setPosition(deleteButton->getPosition() + mainMenu->getPosition());
+
 				menuItem->setPosition(menuItem->getPosition() + mainMenu->getPosition() - CCPoint(menuItem->getContentSize().width / 2.f + 4, 0));
 				menuItem->setAnchorPoint({ 0, 0.5f });
 				mainMenu->setPosition({ 0, 0 });
@@ -125,7 +130,7 @@ class $modify(CommentCell) {
 				modBadge = CCSprite::createWithSpriteFrameName(d(gen) ? "modBadge_01_001.png" : "modBadge_02_001.png");
 				modBadge->setScale(0.55f);
 				modBadge->setPosition(menuItem->getPosition() + CCPoint(menuItem->getContentSize().width + 6, 0));
-
+	
 				mainLayer->addChild(modBadge);
 			}
 			else
@@ -137,9 +142,12 @@ class $modify(CommentCell) {
 
 		obj = nullptr;
 		CCARRAY_FOREACH(commentLabels, obj) {
-			static_cast<CCLabelBMFont*>(obj)->setColor(sameColor ? sharedColor : randomPastelColor(accountID));
+			CCLabelBMFont* lbl = dynamic_cast<CCLabelBMFont*>(obj);
+			if (!lbl) continue;
+			lbl->setColor(sameColor ? sharedColor : randomPastelColor(accountID));
 		}
 	}
+
 };
 
 class $modify(InfoLayer) {
