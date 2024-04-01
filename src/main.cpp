@@ -6,6 +6,7 @@
 
 #include <random>
 #include <algorithm>
+#include <ctime>
 
 #include "name_variations.hpp"
 
@@ -175,6 +176,8 @@ class $modify(InfoLayer) {
 
 class $modify(ProfilePage) {
 	bool init(int accountID, bool ownProfile) {
+		std::random_device rd;
+		int xd = rd();
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return ProfilePage::init(accountID, ownProfile);
 
 		randomColors = Mod::get()->getSettingValue<bool>("random_colors");
