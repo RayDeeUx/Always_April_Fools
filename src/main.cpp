@@ -177,7 +177,8 @@ class $modify(InfoLayer) {
 class $modify(ProfilePage) {
 	bool init(int accountID, bool ownProfile) {
 		std::random_device rd;
-		sharedColor = randomPastelColor(rd());
+		std::mt19937 gen(rd());
+		std::bernoulli_distribution d(0.5);
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return ProfilePage::init(accountID, ownProfile);
 
 		randomColors = Mod::get()->getSettingValue<bool>("random_colors");
