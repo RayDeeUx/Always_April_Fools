@@ -82,8 +82,11 @@ class $modify(CommentCell) {
 
 		CCLabelBMFont* percentageLabel = dynamic_cast<CCLabelBMFont*>(mainLayer->getChildByID("percentage-label"));
 
-		if (isTextArea)
-			commentLabels = getChildOfType<CCNode>(static_cast<CCNode*>(mainLayer->getChildByID("comment-text-area")), 0)->getChildren();
+		if (isTextArea) {
+			TextArea* textArea = static_cast<TextArea*>(mainLayer->getChildByID("comment-text-area");
+			textArea->setPositionX(10);
+			commentLabels = getChildOfType<CCNode>(), 0)->getChildren();
+		}
 		else {
 			commentLabels = CCArray::create();
 			commentLabels->addObject(mainLayer->getChildByID("comment-text-label"));
