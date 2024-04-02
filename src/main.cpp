@@ -68,25 +68,30 @@ class $modify(CommentCell) {
 
 		bool isProfileComment = this->m_accountComment;
 		bool usernameClickable = mainLayer->getChildByID("username-label") == nullptr;
-		bool isTextArea = mainLayer->getChildByID("comment-text-area") != nullptr;
+
+		TextArea* textArea = dynamic_cast<TextArea*>(mainLayer->getChildByID("comment-text-area"));
+		bool isTextArea = textArea != nullptr;
 
 		CCSprite* modBadge = nullptr;
 		CCObject* obj;
+		bool skip = false;
 		CCARRAY_FOREACH(mainLayer->getChildren(), obj) {
 			CCSprite* spr = dynamic_cast<CCSprite*>(obj);
 			if (spr && !dynamic_cast<SimplePlayer*>(obj)) {
-				modBadge = spr;
-				break;
+				if (!skip && isTextArea && comment->m_modBadge < 1) {
+					skip = true;
+					continue;
+				} else {
+					modBadge = spr;
+					break;
+				}
 			}
 		}
 
 		CCLabelBMFont* percentageLabel = dynamic_cast<CCLabelBMFont*>(mainLayer->getChildByID("percentage-label"));
 
-		if (isTextArea) {
-			TextArea* textArea = static_cast<TextArea*>(mainLayer->getChildByID("comment-text-area"));
-			textArea->setPositionX(10.f);
+		if (isTextArea)
 			commentLabels = getChildOfType<CCNode>(textArea, 0)->getChildren();
-		}
 		else {
 			commentLabels = CCArray::create();
 			commentLabels->addObject(mainLayer->getChildByID("comment-text-label"));
@@ -122,19 +127,22 @@ class $modify(CommentCell) {
 		std::string username = this->m_comment->m_userName;
 		int accountID = this->m_comment->m_accountID;
 
+		if (!usernameLabel) return;
 		usernameLabel->setString(randomName(accountID, username).c_str());
 		usernameLabel->setAnchorPoint({ 0.f, 0.5f });
 		usernameLabel->setPositionX(isProfileComment ? 11.f : (usernameClickable ? 0 : usernameLabel->getPositionX()));
 
+		bool badgeFound = true;
 		if (!isProfileComment) {
-			menuItem->setContentWidth(usernameLabel->getContentSize().width / 2);
+			menuItem->setContentWidth((usernameLabel->getContentSize().width / 2) / (isTextArea ? usernameLabel->getScale() : 1.f));
 			if (!modBadge) {
+				badgeFound = false;
 				std::random_device rd;
 				std::mt19937 gen(rd());
 				std::bernoulli_distribution d(0.9);
 
 				modBadge = CCSprite::createWithSpriteFrameName(d(gen) ? "modBadge_01_001.png" : "modBadge_02_001.png");
-				modBadge->setScale(0.55f);
+				modBadge->setScale(isTextArea ? 0.75f : 0.55f);
 				modBadge->setPosition(menuItem->getPosition() + CCPoint(menuItem->getContentSize().width + 6, 0));
 	
 				mainLayer->addChild(modBadge);
@@ -144,13 +152,15 @@ class $modify(CommentCell) {
 
 			if (percentageLabel)
 				percentageLabel->setPositionX(modBadge->getPositionX() + 11);
-		}
+		} else
+			badgeFound = false;
 
 		obj = nullptr;
 		CCARRAY_FOREACH(commentLabels, obj) {
 			CCLabelBMFont* lbl = dynamic_cast<CCLabelBMFont*>(obj);
 			if (!lbl) continue;
 			lbl->setColor(sameColor ? sharedColor : randomPastelColor(accountID));
+			if (badgeFound && isTextArea && comment->m_modBadge < 1) lbl->setPositionX(-(menuItem->getContentSize().width / (isTextArea ? textArea->getScale() : 1.f)) - 25.f);
 		}
 	}
 
