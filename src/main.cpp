@@ -56,7 +56,7 @@ ccColor3B randomPastelColor(int accountID) {
 class $modify(CommentCell) {
 	void loadFromComment(GJComment * comment) {
 		CommentCell::loadFromComment(comment);
-
+return;
 		if (comment->m_isSpam || !Mod::get()->getSettingValue<bool>("enabled")) return;
 		
 		CCLabelBMFont* usernameLabel = nullptr;
@@ -176,7 +176,6 @@ class $modify(InfoLayer) {
 
 class $modify(ProfilePage) {
 	bool init(int accountID, bool ownProfile) {
-		auto xd = randomName(123, "xd");
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return ProfilePage::init(accountID, ownProfile);
 
 		randomColors = Mod::get()->getSettingValue<bool>("random_colors");
