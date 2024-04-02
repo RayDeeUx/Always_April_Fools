@@ -56,7 +56,6 @@ ccColor3B randomPastelColor(int accountID) {
 class $modify(CommentCell) {
 	void loadFromComment(GJComment * comment) {
 		CommentCell::loadFromComment(comment);
-return;
 		if (comment->m_isSpam || !Mod::get()->getSettingValue<bool>("enabled")) return;
 		
 		CCLabelBMFont* usernameLabel = nullptr;
@@ -69,6 +68,7 @@ return;
 
 		bool isProfileComment = this->m_accountComment;
 		bool usernameClickable = mainLayer->getChildByID("username-label") == nullptr;
+		bool isTextArea = mainLayer->getChildByID("comment-text-area") != nullptr;
 
 		CCSprite* modBadge = nullptr;
 		CCObject* obj;
@@ -82,18 +82,20 @@ return;
 
 		CCLabelBMFont* percentageLabel = dynamic_cast<CCLabelBMFont*>(mainLayer->getChildByID("percentage-label"));
 
-		if (isProfileComment) {
-			usernameLabel = static_cast<CCLabelBMFont*>(mainLayer->getChildByID("username-label"));
+		if (isTextArea)
 			commentLabels = getChildOfType<CCNode>(static_cast<CCNode*>(mainLayer->getChildByID("comment-text-area")), 0)->getChildren();
+		else {
+			commentLabels = CCArray::create();
+			commentLabels->addObject(mainLayer->getChildByID("comment-text-label"));
 		}
+
+		if (isProfileComment)
+			usernameLabel = static_cast<CCLabelBMFont*>(mainLayer->getChildByID("username-label"));
 		else {
 			menuItem = usernameClickable ? dynamic_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("username-button"))
 				: CCMenuItemSpriteExtra::create(CCSprite::createWithSpriteFrameName("modBadge_01_001.png"), mainLayer, nullptr);
 			if (!menuItem) return;
 			usernameLabel = usernameClickable ? static_cast<CCLabelBMFont*>(menuItem->getChildren()->objectAtIndex(0)) : static_cast<CCLabelBMFont*>(mainLayer->getChildByID("username-label"));
-
-			commentLabels = CCArray::create();
-			commentLabels->addObject(mainLayer->getChildByID("comment-text-label"));
 
 			if (usernameClickable) {
 				auto likeButton = static_cast<CCMenuItemSpriteExtra*>(mainMenu->getChildByID("like-button"));
