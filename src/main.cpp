@@ -84,7 +84,7 @@ class $modify(CommentCell) {
 
 		if (isTextArea) {
 			TextArea* textArea = static_cast<TextArea*>(mainLayer->getChildByID("comment-text-area"));
-			textArea->setPositionX(10);
+			textArea->setPositionX(10.f);
 			commentLabels = getChildOfType<CCNode>(textArea, 0)->getChildren();
 		}
 		else {
