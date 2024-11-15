@@ -1,10 +1,11 @@
 {
-	"geode": "3.4.0",
+	"geode": "4.0.0-beta.1",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206"
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074"
 	},
-	"version": "v1.0.3",
+	"version": "v1.1.0",
 	"id": "zilko.always_april_fools",
 	"name": "Always April Fools",
 	"developer": "Zilko",
@@ -48,7 +49,7 @@
 	"dependencies": [
 		{
 			"id": "geode.node-ids",
-			"version": ">=v1.8.1",
+			"version": ">=v1.17.0",
 			"importance": "required"
 		}
 	]

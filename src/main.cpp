@@ -61,7 +61,7 @@ class $modify(CommentCell) {
         CCLabelBMFont* usernameLabel = nullptr;
         CCArray* commentLabels = nullptr;
 
-        CCLayer* mainLayer = getChildOfType<CCLayer>(this, 1);
+        CCLayer* mainLayer = this->getChildByType<CCLayer>(1);
         CCMenu* mainMenu = typeinfo_cast<CCMenu*>(mainLayer->getChildByID("main-menu"));
         if (!mainMenu) return;
         CCMenuItemSpriteExtra* menuItem = nullptr;
@@ -92,7 +92,7 @@ class $modify(CommentCell) {
         CCLabelBMFont* percentageLabel = typeinfo_cast<CCLabelBMFont*>(mainLayer->getChildByID("percentage-label"));
 
         if (isTextArea)
-            commentLabels = getChildOfType<CCNode>(textArea, 0)->getChildren();
+            commentLabels = textArea->getChildByType<CCNode>(0)->getChildren();
         else {
             commentLabels = CCArray::create();
             commentLabels->addObject(mainLayer->getChildByID("comment-text-label"));
